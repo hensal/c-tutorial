@@ -40,18 +40,38 @@ int main()
 	while(ptr != NULL)
 	{
 		printf("'%s'\n", ptr);
+		printf("%s\n", ptr);
 		ptr = strtok(NULL, delim);
 	}
-
 	return 0;
 }
 
-OUTPUT:
-'strtok'
-'needs'
-'to'
-'be'
-'called'
-'several'
-'times'
-and so on
+OUTPUT1:        OUTPUT2:
+'strtok'        strtok
+'needs'         needs
+'to'            to
+'be'            be
+'called'        called
+'several'       several
+'times'         times
+and so on.        and so on.
+
+Note:Delimiter can be any.
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+	char str[] = "strtok needs to be called several times to split a string";
+	int init_size = strlen(str);
+	char delim[] = "ai";
+	
+	char *ptr = strtok(str, delim);
+
+	while (ptr != NULL)
+	{
+		printf("'%s'\n", ptr);
+		ptr = strtok(NULL, delim);
+	}
+	return 0;
+}
