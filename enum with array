@@ -95,3 +95,17 @@ int main()
        printf("Today is saturday");  
        break;  
    }  
+
+example3:
+#include <stdio.h>
+enum FRUIT_ENUM {
+    apple, orange, grape, banana,
+};
+int main()
+{
+   static const char *FRUIT_STRING[] = {
+    "apple", "orange", "grape", "banana",
+};
+printf("enum apple as a string: %s\n",FRUIT_STRING[apple]);
+    return 0;
+}
