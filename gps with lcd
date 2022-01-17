@@ -1,0 +1,71 @@
+void dsp_gps(unsigned char page_num) {
+	unsigned char n;
+	unsigned char titl_l1[24] = "GPS              *  ";
+	unsigned char titl_l2[24] = "00,00,00,11,30,45.00";
+	
+//ﾀｲﾄﾙ表示
+	for (n=0 ;n<20 ;n++){
+		dsp_buff1[n] = titl_l1[n];
+		dsp_buff2[n] = titl_l2[n];
+	}
+//ﾍﾟｰｼﾞ番号
+	bcd2d_disp(1,18,page_num);
+//RX2ﾃﾞｰﾀ表示
+	for (n=0; n<20; n++){
+		dsp_buff2[n] = rx2_id_buff[n];
+	}
+//[SET]ﾎﾞﾀﾝﾁｪｯｸ
+	if (key_code == KEY_UP) gps_power_flag = 1;
+	if (key_code == KEY_DOWN) gps_power_flag = 0;
+	if (gps_power_flag == 0) {
+		dsp_buff1[4] = 'O';
+		dsp_buff1[5] = 'F';
+		dsp_buff1[6] = 'F';
+		P7 |= 0x10;		                                             //GPS OFF(Hi OFF)		
+	}
+	else {
+		dsp_buff1[4] = 'O';
+		dsp_buff1[5] = 'N';
+		dsp_buff1[6] = ' ';
+		if(P7 &= 0xEF) {	                                             //GPS ON(Lo ON)			
+	        for(n = 0 ; n < NMEA_TIME; ++n) {
+                        if(dsp_buff2[n] == ',') {
+                            dsp_buff2[n] = 0;                                     // Terminate the current string
+                            nmea_field[f] = dsp_buff2[n]+1;           //    Set the pointer after the comma
+                            f++;                                             // Increase the field index
+                                  }
+                 if(dsp_buff2[i] == 0) break;                               //    Leave when you reach the end of str
+            }
+	}}
+	dsp_buff_disp();
+}
+
+$GPZDA,082710.00,16,09,2002,00,00*64
+$xxZDA,time,day,month,year,ltzh,ltzn*cs<CR><LF>
+
+ for instance define an enum in order to index your fields. Skip $GPGGA which is useless.
+
+Code:
+enum {
+    NMEA_TIME, NMEA_LAT, NMEA_LON .... etc .... NUM_FIELDS
+};
+
+ define an array of strings:
+
+char * nmea_fields[NUM_FIELDS];
+
+Then when doing your iteration, supposing  string is name nmea_str:
+
+Code:
+uint8 i;
+uint8 f = 0;
+for(i = 0 ; i < NUM_FIELDS ; ++i) {
+    if(str[i] == ',') {
+        str[i] = 0;                   // Terminate the current string
+        nmea_fields[f] = str+i+1;     //    Set the pointer after the comma
+        f++;                          // Increase the field index
+    }
+    if(str[i] == 0) break;            //    Leave when you reach the end of str
+}
+then can
+access all the fields by index. Time for instance will be nmea_fields[NMEA_TIME];
