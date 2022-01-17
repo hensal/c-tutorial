@@ -1,0 +1,53 @@
+typedef enum {
+...
+} MyEnum;
+
+MyEnum MyEnumArray[] = ...;
+
+[OR]
+
+Remove the typedefstatement:
+
+enum MyEnum{
+A = 0,
+B,
+C,
+D
+} MyEnumArray[] = {A, B, C, D};
+
+example:
+#include <stdio.h>
+enum week {Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday};
+
+int main()
+{
+    // creating today variable of enum week type
+    enum week today;
+    today = Wednesday;
+    printf("Day %d",today+1);
+    return 0;
+}
+
+example2:
+#include <stdio.h>
+typedef enum
+{
+  ZERO,
+  ONE, 
+  TWO, 
+  THREE,
+  NUMBERS_N
+} numbers_t;
+int main()
+{
+    static const char* NUMBER_STR[NUMBERS_N] = 
+{
+  [ZERO]  = "ZERO",
+  [ONE]   = "ONE",
+  [TWO]   = "TWO",
+  [THREE] = "THREE",
+};
+puts(NUMBER_STR[1]); // prints ONE
+puts(NUMBER_STR[TWO]); // prints ONE
+    return 0;
+}
