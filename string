@@ -6,6 +6,8 @@ Initializing a String:
 
 2. char str[50] = "hensal kailsh";
 
+2  char str[]="$GPZDA,082710.00,16,09,2002,00,00*64";
+
 3. char str[] = {'G','e','e','k','s','f','o','r','G','e','e','k','s','\0'};
 
 4. char str[14] = {'G','e','e','k','s','f','o','r','G','e','e','k','s','\0'};
