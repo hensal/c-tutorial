@@ -1,0 +1,8 @@
+Initializing a String:
+1. char str[] = "hensalkailsh";
+
+2. char str[50] = "hensal kailsh";
+
+3. char str[] = {'G','e','e','k','s','f','o','r','G','e','e','k','s','\0'};
+
+4. char str[14] = {'G','e','e','k','s','f','o','r','G','e','e','k','s','\0'};
