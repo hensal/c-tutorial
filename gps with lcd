@@ -1,3 +1,4 @@
+u-blox8-M8_ReceiverDescrProtSpec_UBX-13003221:
 void dsp_gps(unsigned char page_num) {
 	unsigned char n;
 	unsigned char titl_l1[24] = "GPS              *  ";
