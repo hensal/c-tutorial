@@ -1,0 +1,42 @@
+A union is a user-defined type similar to structs in C except for one key difference.
+Structures allocate enough space to store all their members, whereas unions can only hold one member value at a time.
+How to define a union?
+We use the union keyword to define unions. Here's an example:
+union car
+{
+  char name[50];
+  int price;
+};
+The above code defines a derived type union car.
+Create union variables
+When a union is defined, it creates a user-defined type. However, no memory is allocated. 
+To allocate memory for a given union type and work with it, we need to create variables.
+Here's how we create union variables.
+union car
+{
+  char name[50];
+  int price;
+};
+int main()
+{
+  union car car1, car2, *car3;
+  return 0;
+}
+Another way of creating union variables is:
+union car
+{
+  char name[50];
+  int price;
+} car1, car2, *car3;
+In both cases, union variables car1, car2, and a union pointer car3 of union car type are created.
+Access members of a union：
+We use the . operator to access members of a union. And to access pointer variables, we use the -> operator.
+Example:
+union
+{
+  int i;
+  float f;
+} u;
+// Convert floating-point bits to integer:
+u.f = 3.14159f;
+printf("As integer: %08x\n", u.i);
