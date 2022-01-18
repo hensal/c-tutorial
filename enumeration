@@ -1,0 +1,47 @@
+In C programming, an enumeration type (also called enum) is a data type that consists of integral constants.
+To define enums, the enum keyword is used.
+SYNTAX:
+      enum flag {const1, const2, ..., constN};
+NOTE:By default, const1 is 0, const2 is 1 and so on. 
+You can change default values of enum elements during declaration (if necessary).
+
+// Changing default values of enum constants
+enum suit {
+    club = 0,
+    diamonds = 10,
+    hearts = 20,
+    spades = 3,
+};
+Enumerated Type Declaration:
+enum boolean {false, true};
+enum boolean check; // declaring an enum variable
+Here, a variable check of the type enum boolean is created.
+You can also declare enum variables like this.
+enum boolean {false, true} check;
+
+#include <stdio.h>
+enum week {Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday};
+int main()
+{
+    // creating today variable of enum week type
+    enum week today;
+    today = Wednesday;
+    printf("Day %d",today+1);
+    return 0;
+}
+Output:
+Day 4
+EXAMPLE2:
+#include <stdio.h>
+enum suit {
+    club = 0,
+    diamonds = 10,
+    hearts = 20,
+    spades = 3
+} card;
+int main() 
+{
+  card = club;
+	printf("Size of enum variable = %d bytes", sizeof(card));	
+	return 0;
+}
