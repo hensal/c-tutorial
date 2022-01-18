@@ -1,4 +1,6 @@
 Double quotes imply a null-terminated string, whereas single quotes are single chars.
+don't use == to compare strings in C, you use strcmp()
+
 Declaration of strings:
 char str_name[size];
 
