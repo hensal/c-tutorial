@@ -1,0 +1,99 @@
+In C programming, a struct (or structure) is a collection of variables (can be of different types) under a single name.
+Define Structures:
+Before you can create structure variables, you need to define its data type. To define a struct, the struct keyword is used.
+Syntax of struct:
+struct structureName {
+  dataType member1;
+  dataType member2;
+  ...
+};
+For example,
+struct Person {
+  char name[50];
+  int citNo;
+  float salary;
+};
+Here, a derived type struct Person is defined. Now, you can create variables of this type.
+Create struct Variables:
+When a struct type is declared, no storage or memory is allocated. To allocate memory of a given structure type and work with it, we need to create variables.
+Here's how we create structure variables:
+struct Person {
+  // code
+};
+int main() {
+  struct Person person1, person2, p[20];
+  return 0;
+}
+Another way of creating a struct variable is:
+struct Person {
+   // code
+} person1, person2, p[20];
+In both cases,
+
+person1 and person2 are struct Person variables
+p[] is a struct Person array of size 20.
+Access Members of a Structure
+There are two types of operators used for accessing members of a structure.
+
+. - Member operator
+-> - Structure pointer operator (will be discussed in the next tutorial)
+Suppose, you want to access the salary of person2. Here's how you can do it.
+
+person2.salary
+#example:
+#include <stdio.h>
+#include <string.h>
+
+// create struct with person1 variable
+struct Person {
+  char name[50];
+  int citNo;
+  float salary;
+} person1;
+
+int main() {
+
+  // assign value to name of person1
+  strcpy(person1.name, "George Orwell");
+
+  // assign values to other person1 variables
+  person1.citNo = 1984;
+  person1. salary = 2500;
+
+  // print struct variables
+  printf("Name: %s\n", person1.name);
+  printf("Citizenship No.: %d\n", person1.citNo);
+  printf("Salary: %.2f", person1.salary);
+
+  return 0;
+}
+Note:we have used strcpy() function to assign the value to person1.name.
+
+We use the typedef keyword to create an alias name for data types. 
+It is commonly used with structures to simplify the syntax of declaring variables.
+For example, let us look at the following code:
+
+struct Distance{
+  int feet;
+  float inch;
+};
+
+int main() {
+  struct Distance d1, d2;
+}
+We can use typedef to write an equivalent code with a simplified syntax:
+
+typedef struct Distance {
+  int feet;
+  float inch;
+} distances;
+
+int main() {
+  distances d1, d2;
+}
+Why structs in C?
+Suppose, you want to store information about a person: his/her name, citizenship number, and salary. 
+You can create different variables name, citNo and salary to store this information.
+What if you need to store information of more than one person? 
+Now, you need to create different variables for each information per person: name1, citNo1, salary1, name2, citNo2, salary2, etc.
+A better approach would be to have a collection of all related information under a single name Person structure and use it for every person.
