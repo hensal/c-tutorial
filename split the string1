@@ -1,3 +1,6 @@
+<*>Give each enumerator an associated value.
+<*>Define the C Style string use double quote.
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
