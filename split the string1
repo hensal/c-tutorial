@@ -1,0 +1,32 @@
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+
+typedef enum {
+  NMEA_TIME = 0,
+  NMEA_DAY = 1,
+  NMEA_MONTH = 2,
+  NMEA_YEAR = 3
+} NMEA_FIELDS;
+
+int main() {
+  char *nmea_fields[7]; // defining the array of string
+  int i = 0;
+  int f = 0;
+  char str[] = "$GPZDA,082710.00,16,09,2002,00,00*64";
+  int tmp_len = strlen(str);
+
+  for (i = 0; i <= tmp_len; ++i) {
+    if (str[i] == ',') {
+      str[i] = 0; // Terminate the current string
+      i++;
+      nmea_fields[f] = str + i; // Set the pointer after the comma
+      f++;                      // Increase the field index
+    }
+  }
+
+  for (i = 0; i < f; ++i) {
+    printf(nmea_fields[i]);
+    printf("\n");
+  }
+}
