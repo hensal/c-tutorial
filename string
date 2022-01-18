@@ -1,3 +1,4 @@
+Double quotes imply a null-terminated string, whereas single quotes are single chars.
 Declaration of strings:
 char str_name[size];
 
