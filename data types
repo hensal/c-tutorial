@@ -1,0 +1,8 @@
+char is an integral type (same as int, long, long long etc etc), only ranges are different.
+%d printf integer, character constant 'a' has type int and value 97 in ASCII.
+
+#include<stdio.h>
+int main(){
+    printf("%d\n", 'a');
+    printf("%c\n", 97);
+}
