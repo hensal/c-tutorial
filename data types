@@ -1,5 +1,7 @@
 char is an integral type (same as int, long, long long etc etc), only ranges are different.
 %d printf integer, character constant 'a' has type int and value 97 in ASCII.
+Array:
+char name[10][30];, 10 is the number of strings and 30 is the length of each string.
 
 #include<stdio.h>
 int main(){
