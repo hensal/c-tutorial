@@ -1,0 +1,64 @@
+What is Nested Structure?
+Structure is a user define data type that contains one or more different type of variables. 
+When a structure definition has an object of another structure, it is known as Nested Structure.
+
+Structure Definitions
+Here, we are defining two structure dateOfBirth and studentDetails and declaring an object of structure dateOfBirth within studentDetails structure.
+
+struct dateOfBirth
+{
+	int dd,mm,yy;
+};
+
+struct studentDetails
+{
+	char name[30];
+	int age;
+	struct dateOfBirth dob;
+};
+Here, structure dateOfBirth contains variables dd, mm and yy to store date, and structure studentDetails contains name, age and object of dateOfBirth structure.
+Structure Initialization
+Structure can be initialized by two methods
+
+Method 1
+struct studentDetails std={"Mike",21,{15,10,1990}};
+OR
+
+struct studentDetails std={"Mike",21,15,10,1990};
+Here, "Mike" and 21 will be stored in the members name and age of structure studentDetails, while values 15, 10 and 1990 will be stored in the dd, mm, and yy of structure dateOfBirth.
+
+Here, is the example by initializing the values using this method (Only main() function is here, place given structure definitions before the main() )
+
+int main()
+{
+	struct studentDetails std={"Mike",21,15,10,1990};
+
+	printf("Name: %s, Age: %d\n",std.name,std.age);
+	printf("DOB: %d/%d/%d\n",std.dob.dd,std.dob.mm,std.dob.yy);
+	
+	return 0;
+}
+Output would be
+
+Name: Mike, Age: 21
+DOB: 15/10/1990
+
+Method 2
+struct dateOfBirth dob={15,10,1990};
+struct studentDetails std={"Mike",21,dob};
+Initialize the first structure first, then use structure variable in the initialization statement of main (parent) structure.
+
+int main()
+{
+	struct dateOfBirth dob={15,10,1990};
+	struct studentDetails std={"Mike",21,dob};
+	
+	printf("Name: %s, Age: %d\n",std.name,std.age);
+	printf("DOB: %d/%d/%d\n",std.dob.dd,std.dob.mm,std.dob.yy);
+	
+	return 0;
+}
+Output would be
+
+Name: Mike, Age: 21
+DOB: 15/10/1990
