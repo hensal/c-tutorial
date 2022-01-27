@@ -1,0 +1,21 @@
+#include<stdio.h>
+struct dateOfBirth
+{
+	int dd,mm,yy;
+};
+
+struct studentDetails
+{
+	char name[30];
+	struct dateOfBirth dob;
+};
+
+int main()
+{
+	struct studentDetails std={"Mike",15,10,1990};
+	printf("Name: %s\n",std.name);
+	printf("DOB: %d/%d/%d\n",std.dob.dd,std.dob.mm,std.dob.yy);
+	return 0;
+}
+
+
