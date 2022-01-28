@@ -3,13 +3,11 @@ struct dateOfBirth
 {
 	int dd,mm,yy;
 };
-
 struct studentDetails
 {
 	char name[30];
 	struct dateOfBirth dob;
 };
-
 int main()
 {
 	struct studentDetails std={"Mike",15,10,1990};
@@ -17,5 +15,33 @@ int main()
 	printf("DOB: %d/%d/%d\n",std.dob.dd,std.dob.mm,std.dob.yy);
 	return 0;
 }
+
+#example2:
+#include<stdio.h>
+struct dateOfBirth
+{
+	int dd,mm,yy;
+};
+struct studentDetails
+{
+	char name[30];
+	struct dateOfBirth dob;
+};
+int main()
+{
+	struct studentDetails std={"Nigata",15,10,1990};
+	struct studentDetails std1={"hensal",18,1,1995};
+	struct studentDetails std2={"gretal",23,9,1960};
+	printf("Name: %s\n",std.name);
+	printf("DOB: %d/%d/%d\n",std.dob.dd,std.dob.mm,std.dob.yy);
+	printf("\n");
+	printf("Name: %s\n",std1.name);
+	printf("DOB: %d/%d/%d\n",std1.dob.dd,std1.dob.mm,std1.dob.yy);
+	printf("\n");
+	printf("Name: %s\n",std2.name);
+	printf("DOB: %d/%d/%d\n",std2.dob.dd,std2.dob.mm,std2.dob.yy);
+	return 0;
+}
+
 
 
