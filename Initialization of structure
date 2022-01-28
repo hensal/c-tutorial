@@ -1,0 +1,43 @@
+Structure is a user defined data type. It is a collection of different types combined together to create a new type.
+
+Let us declare a student structure containing three fields i.e. name, roll and marks.
+struct student
+{
+    char  name[100];
+    int   roll;
+    float marks;
+};
+
+How to initialize a structure variable?
+Initialize structure using dot operator:
+In C, we initialize or access a structure variable either through dot . or arrow -> operator. This is the most easiest way to initialize or access a structure.
+Example:
+
+// Declare structure variable
+struct student stu1;
+
+// Initialize structure members
+stu1.name  = "Pankaj";
+stu1.roll  = 12;
+stu1.marks = 79.5f;
+
+[OR]
+// Declare and initialize structure variable
+struct student stu1 = { "Pankaj", 12, 79.5f };
+
+Variant of value initialized structure variable:
+Example:
+// Declare and initialize structure variable
+struct student stu1 = { 
+    .roll  = 12,
+    .name  = "Pankaj",
+    .marks = 79.5f
+};
+Structure default initialization:
+Default initialization of a variable considered as good programming practice.
+Example:
+
+// Define macro for default structure initialization
+#define NEW_STUDENT { "", 0, 0.0f }
+// Default initialization of structure variable
+struct student stu1 = NEW_STUDENT;
