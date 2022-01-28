@@ -1,0 +1,23 @@
+Message Structure:
+$xxZDA,time,day,month,year,ltzh,ltzn*cs<CR><LF>
+Example:
+$GPZDA,082710.00,16,09,2002,00,00*64
+
+int main ()
+{
+    char buf[] ="$GPZDA,082710.00,16,09,2002,00,00*64";
+    int i = 0;
+    char *p = strtok (buf, ",");
+    char *array[7];
+
+    while (p != NULL)
+    {
+        array[i++] = p;
+        p = strtok (NULL, ",");
+    }
+
+    for (i = 0; i < 7; ++i) 
+        printf("%s\n", array[i]);
+
+    return 0;
+}
