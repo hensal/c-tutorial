@@ -1,0 +1,226 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "r_cg_macrodriver.h"
+#include "uart_n.h"
+#include "stkw167def.h"
+/**************************************************************************/
+/*	Globals(グローバル変数宣言)					***/
+/**************************************************************************/
+#define MAX_LINEBUF 100
+
+static short idx;
+static unsigned int rslc = 0;
+
+static unsigned char gps_linebuf[MAX_LINEBUF];
+unsigned char time_flag;
+static unsigned char year[4]={0},mon[4]={0},day[4]={0};
+static unsigned char hour[4]={0},min[4]={0},sec[4]={0};
+static unsigned char rsl[4]={0},satelite[4]={0},noM[4]={0},mNo[4]={0};
+static unsigned char nSVc = 0,noMc=0,mNoc=0;
+
+extern STKW167_TX iic_tx;
+extern unsigned char set_cnt1,set_cnt2;
+extern unsigned char deb_disp;
+extern unsigned char gps_rxf;
+/***************************************************************************************************/
+/*NMARE 
+      *  $GNRMC,114811.00,A,3558.94849,N,14008.90158,E,0.076,,141115,,,A*69
+         $GNVTG,,T,,M,0.076,N,0.141,K,A*38
+         $GNGGA,114811.00,3558.94849,N,14008.90158,E,1,07,1.18,31.3,M,39.3,M,,*72
+         $GNGSA,A,3,22,24,12,15,18,14,25,,,,,,3.03,1.18,2.80*14
+         $GNGSA,A,3,,,,,,,,,,,,,3.03,1.18,2.80*1E                                                           
+      *  $GPGSV,3,1,09,12,66,091,27,14,38,313,33,15,26,114,26,18,51,212,32*7E
+      *  $GPGSV,3,2,09,20,04,163,,22,49,280,29,24,45,048,33,25,53,183,28*75
+      *  $GPGSV,3,3,09,31,08,255,*48
+      *  $GLGSV,2,1,05,,,,24,,,,29,,,,25,,,,31*6B
+      *  $GLGSV,2,2,05,,,,24*66
+         $GNGLL,3558.94849,N,14008.90158,E,114811.00,A,A*70*/
+/****************************************************************************************************/
+void gps_getinfo(unsigned char c)
+{
+	short i,j,len;
+	char *ptr,*ptrTop;
+	unsigned char j1,j2;
+	unsigned char kanma[20]={0};
+	
+	if (c != '\n'){
+		gps_linebuf[idx++] = c;
+		if(idx >= MAX_LINEBUF)idx=0;
+	}
+	else {
+		gps_linebuf[idx++] = '\n';
+		gps_linebuf[idx] = '\0';
+		// "$"をｻｰﾁ
+		i = MAX_LINEBUF;
+		j = idx - 1;
+		while(1){
+			if(gps_linebuf[j] == '$') break;
+			j--;
+			if(j < 0) j = MAX_LINEBUF - 1;
+			if(i-- == 0){
+				gps_linebuf[0] = 0; idx=0;
+				return;
+			}
+		}
+		gps_linebuf[idx] = 0; idx=0; 		  // １ﾌﾚｰﾑﾃﾞｰﾀ受信終了処理
+		ptrTop = (char *)&gps_linebuf[j];
+		ptr = (char *)&gps_linebuf[j];
+
+	// GNRMC 一致 "$GNRMC,114811.00,A,3558.94849,N,14008.90158,E,0.076,,141115,,,A*69"
+		if(strstr(ptrTop,"GNRMC")!=0) {
+			len=strlen(ptr);
+			j=0;
+			for(i=0; i<len; ++i,ptr++) {	  // カンマ位置の検出
+				if(*ptr == ',') {
+					kanma[j++] = i+1;
+				}
+			}
+			ptr = ptrTop;
+			j1=kanma[0];
+			j2=kanma[1] - kanma[0];
+			time_flag = 0;
+			if(j2>=4) {
+				strncpy((char *)hour,ptr+j1  ,2);
+				strncpy((char *)min, ptr+j1+2,2);
+				strncpy((char *)sec, ptr+j1+4,2);
+				time_flag |=0x01;
+			}
+			j1=kanma[1];
+			j2=kanma[2] - kanma[1];
+			if(j2>=1){
+				if(*(ptr + j1) == 'A') {
+					time_flag |=0x04;
+				}
+			}
+			j1=kanma[8];
+			j2=kanma[9] - kanma[8];
+			if(j2>=4){
+				strncpy((char *)day,  ptr+j1  ,2);
+				strncpy((char *)mon,  ptr+j1+2,2);
+				strncpy((char *)year, ptr+j1+4,2);
+				time_flag |=0x02;
+
+				iic_tx.year = atoi((char *)year);
+				iic_tx.mon  = atoi((char *)mon);
+				iic_tx.day  = atoi((char *)day);
+				iic_tx.hour = atoi((char *)hour);
+				iic_tx.min  = atoi((char *)min);
+				iic_tx.sec  = atoi((char *)sec);
+			}
+			if(time_flag == 0x07) {
+				if(set_cnt1 >= 5) {
+					T_GPS_CLOCK_FLG = 1;		//RMC DATA OK
+				}
+				if(set_cnt1 <= 5)set_cnt1++;
+			}
+			else {
+				T_GPS_CLOCK_FLG = 0;		//RMC DATA NG
+			}
+			if(deb_disp == 3) 
+				uart2_puts(ptrTop);
+		}
+		
+	// GPGSV 一致
+		if(strstr(ptrTop,"GPGLL")!=0) {
+			len=strlen(ptr);
+			j=0;
+			for(i=0;i<len;++i,ptr++) {	  // カンマ位置の検出-Comma position detection
+				if(*ptr==','){kanma[j]=i+1;j++;}
+			}
+			ptr = ptrTop;
+			j1=kanma[2];
+			strncpy((char *)satelite,ptr+j1  ,2);
+			nSVc = atoi((char *)satelite);
+			if(nSVc > 0){
+				j1=kanma[0];
+				strncpy((char *)noM,ptr+j1,1);
+				noMc = atoi((char *)noM);
+				j1=kanma[1];
+				strncpy((char *)mNo, ptr+j1,1);
+				mNoc = atoi((char *)mNo);
+
+				for(i = 0;i<=3;i++){
+					j1=kanma[6+i*4];
+					if(*(ptr+j1+1) == '*'){
+						rslc += 0;
+						break;
+					}
+					else if(*(ptr+j1) == ','){
+						rslc += 0;
+					}
+					else{
+						strncpy((char *)rsl,ptr+j1  ,2);
+						rslc += atoi((char *)rsl);
+					}
+					if(*(ptr+j1+3) == '*'){
+						rslc += 0;
+						break;
+					}
+				}
+				if(noMc == mNoc){
+					rslc = rslc / nSVc;
+					iic_tx.rsl = rslc;
+					iic_tx.satellite = nSVc;
+					rslc = 0;
+					nSVc = 0;
+					if(++set_cnt2 >= 10){
+						T_GPS_STATUS_FLG = 1;		    //GSV DATA OK
+					}
+				}
+			}
+			if(deb_disp == 3)	uart2_puts(ptrTop);
+		}
+	
+	// GNGLL 一致
+		if(strstr(ptrTop,"GPGLL")!=0){
+			gps_rxf = 1;
+			if(deb_disp == 3)
+				uart2_puts(ptrTop);
+		}
+	}
+}
+
+void dsp_gps(unsigned char page_num) { 
+       unsigned char n;
+       unsigned char titl_l1[24] = "GPS              *  ";
+       unsigned char titl_l2[24] = "00,00,00,11,30,45.00";	 
+       //char buf[] ="$GPZDA,082710.00,16,09,2002,00,00*64";     
+       // unsigned int c1=comma_position[0];
+       // lcd_cout(0x01);
+       // lcd_dout(comma_position[0]);
+       char search[] = "082710.00";
+       char **tokens = split(dsp_buff2, ','); 
+       size_t size =  getSize(tokens);  
+       size_t index = getIndex(tokens, search, size);
+//ﾀｲﾄﾙ表示
+	for (n=0 ;n<70 ;n++) {
+		dsp_buff1[n] = titl_l1[n];
+		dsp_buff2[n] = titl_l2[n];
+	}
+//ﾍﾟｰｼﾞ番号
+	bcd2d_disp(1,18,page_num);
+//RX2ﾃﾞｰﾀ表示
+	for (n=0; n<70; n++) {
+		dsp_buff2[n] = rx2_id_buff[n];		
+	}
+//[SET]ﾎﾞﾀﾝﾁｪｯｸ
+	if (key_code == KEY_UP) gps_power_flag = 1;
+	if (key_code == KEY_DOWN) gps_power_flag = 0;
+	if (gps_power_flag == 0) {	
+		dsp_buff1[4] = 'O';
+		dsp_buff1[5] = 'F';
+		dsp_buff1[6] = 'F';		
+		P7 |= 0x10;		                                             //GPS OFF(Hi-OFF)				
+		}
+	else {
+		dsp_buff1[4] = 'O';
+		dsp_buff1[5] = 'N';
+		dsp_buff1[6] = ' ';
+	        if((P7 &= 0xEF) && (index >= 0))                         //GPS ON(Lo-ON)	
+		      lcd_dout(*(tokens+index));
+		      //lcd_cout(0x80);
+	              //lcd_dout(dsp_buff2[c1+0]);		
+	}
+	dsp_buff_disp();        
+}
