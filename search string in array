@@ -1,0 +1,41 @@
+# C Program to find a string in an array of strings:
+Syntax for strcmp():
+int strcmp(const char *str1, const char *str2);
+
+strcmp() compares string str1 to string str2. The function returns 0 if both the strings are same.
+
+example:
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+
+	char str[100];	// string to search
+	char s[100][100];	// array of string
+	int n;	// number of string in the array
+	int i;
+
+	printf("Enter Number of Strings: ");
+	scanf("%d", &n);
+
+	for (i = 0; i < n; ++i) {
+		scanf("%s", s[i]);
+	}
+
+	printf("Enter string to search: ");
+	scanf("%s", str);
+
+	for (i = 0; i < n; ++i) {
+		if (!strcmp(str, s[i])) {
+			break;
+		}
+	}
+
+	if (i != n) {
+		printf("%s is present in the array at row %d", str, i);
+	}
+	else {
+		printf("%s is not present in the array", str);
+	}
+
+}
