@@ -1,0 +1,35 @@
+#"$GPRMC,050229.000,A,3008.647,N,11001.282,W,0.1,0.0,140518,11.7,E*4B"`
+Use strtok for parsing:
+
+int main(void)
+{
+    FILE *fp = fopen("test.txt", "r");
+
+    char buf[256];
+    char *array[20];
+    while(fgets(buf, sizeof(buf), fp))
+    {
+        if(strstr(buf, "$GPRMC"))
+        {
+            int count = 0;
+            char *token;
+            token = strtok(buf, ",");
+            while(token != NULL)
+            {
+                array[count++] = token;
+                token = strtok(NULL, ",");
+                if(count == 20)
+                    break;
+            }
+
+            printf("Latitude : %s %s\n", array[3], array[4]);
+            printf("Longitude : %s %s\n", array[5], array[6]);
+        }
+    }
+
+    return 0;
+}
+Result:
+
+Latitude : 3008.647 N
+Longitude : 11001.282 W
