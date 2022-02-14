@@ -1,0 +1,97 @@
+void gps_getinfo(unsigned char rx2_id_buff[]);
+void uart2_rx_int(void);
+#define MAX_LINEBUF 70
+char gps_linebuf[MAX_LINEBUF];
+unsigned char time_flag;
+unsigned char rx2_id_buff[70];  
+unsigned char rx2_id_pointer;   
+unsigned char year[4]={0},mon[4]={0},day[4]={0};
+unsigned char hour[4]={0},min[4]={0},sec[4]={0};
+#pragma interrupt uart2_rx_int  (vect=0x16)
+
+void uart2_rx_int(void)
+{
+    unsigned char error;
+    error = SSR11 & 0x07;                                                  
+    rx2_id = SDR11;                                                  
+    if (error == 0) {   
+        if(rx2_id ==  '$' ) rx2_id_pointer = 0;    
+             rx2_id_buff[rx2_id_pointer] = rx2_id;        //storing data in the buffer received form UART                      
+             gps_getinfo(rx2_id_buff[rx2_id_pointer]);                                         
+          }
+        else    
+             rx2_id_buff[rx2_id_pointer] = err | 0xF0;
+             rx2_id_pointer++;                                        
+        if (rx2_id_pointer > 69) rx2_id_pointer = 0;
+}
+
+void gps_getinfo(unsigned char rx2_id_buff[]) {
+    short i,j,len;
+    char *ptr,*ptrTop;
+    unsigned char j1,j2;
+    unsigned char comma[20]={0};    
+    
+    if (rx2_id_buff != '\n') {      
+        gps_linebuf[idx++] = rx2_id_buff;                                           
+        if(idx >= MAX_LINEBUF)idx=0;
+    }
+    else {
+        gps_linebuf[idx++] = '\n';
+        gps_linebuf[idx] = '\0';        
+        i = MAX_LINEBUF;
+        j = idx - 1;
+        while(1) {
+            if(gps_linebuf[j] == '$') break;                         
+            j--;
+            if(j < 0) j = MAX_LINEBUF - 1;
+            if(i-- == 0) {
+                gps_linebuf[0] = 0; idx=0;
+                return;
+            }
+        }
+        gps_linebuf[idx] = 0; idx=0;                                     
+        ptrTop = (char *)&gps_linebuf[j];
+        ptr = (char *)&gps_linebuf[j];
+        //$GNRMC,114811.00,A,3558.94849,N,14008.90158,E,0.076,,141115,,,A*69
+        if(strstr(ptrTop,"GNRMC")!=0) {
+            len=strlen(ptr);
+            j=0;
+            for(i=0; i<len; ++i,ptr++) {                   
+                if(*ptr == ',') {
+                    comma[j++] = i+1;
+                }
+            }
+            ptr = ptrTop;
+            j1=comma[0];
+            j2=comma[1] - comma[0];
+            time_flag = 0;
+            if(j2>=4) {
+                strncpy((char *)hour,ptr+j1  ,2);                                   
+                strncpy((char *)min, ptr+j1+2,2);                        
+                strncpy((char *)sec, ptr+j1+4,2);                           
+                time_flag |=0x01;
+            }
+            j1=comma[1];
+            j2=comma[2] - comma[1];
+            if(j2>=1) {
+                if(*(ptr + j1) == 'A') {
+                    time_flag |=0x04;
+                }
+            }
+            j1=comma[8];
+            j2=comma[9] - comma[8];
+            if(j2>=4) {
+                strncpy((char *)day,  ptr+j1  ,2);                                      
+                strncpy((char *)mon,  ptr+j1+2,2);                                 
+                strncpy((char *)year, ptr+j1+4,2);                                  
+                time_flag |=0x02;
+                year = atoi((char *)year);                
+                mon  = atoi((char *)mon);                  
+                day  = atoi((char *)day);               
+                hour = atoi((char *)hour);              
+                min  = atoi((char *)min);               
+                sec  = atoi((char *)sec);                           
+            }           
+        }
+    }
+}
