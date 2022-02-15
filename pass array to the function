@@ -63,3 +63,41 @@ int main()
 }
 Output:
 1 2 3 4 5 6 7 8 9 0
+
+[OR]
+How to pass an entire array to a function as an argument?
+In the above example, we have passed the address of each array element one by one using a for loop in C. However you can also pass an entire array to a function like this:
+
+Note: The array name itself is the address of first element of that array. For example if array name is arr then you can say that arr is equivalent to the &arr[0].
+
+#include <stdio.h>
+void myfuncn( int *var1, int var2)
+{
+	/* The pointer var1 is pointing to the first element of
+	 * the array and the var2 is the size of the array. In the
+	 * loop we are incrementing pointer so that it points to
+	 * the next element of the array on each increment.
+	 *
+	 */
+    for(int x=0; x<var2; x++)
+    {
+        printf("Value of var_arr[%d] is: %d \n", x, *var1);
+        /*increment pointer for next element fetch*/
+        var1++;
+    }
+}
+
+int main()
+{
+     int var_arr[] = {11, 22, 33, 44, 55, 66, 77};
+     myfuncn(var_arr, 7);
+     return 0;
+}
+Output:
+Value of var_arr[0] is: 11 
+Value of var_arr[1] is: 22 
+Value of var_arr[2] is: 33 
+Value of var_arr[3] is: 44 
+Value of var_arr[4] is: 55 
+Value of var_arr[5] is: 66 
+Value of var_arr[6] is: 77 
