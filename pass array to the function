@@ -21,6 +21,9 @@ float calculateSum(float num[]) {
 
 [OR}
 
+Passing array to function using call by value method
+As we already know in this type of function call, the actual parameter is copied to the formal parameters.
+
 #include <stdio.h>
 void disp( char ch)
 {
@@ -36,6 +39,27 @@ int main()
    }
    return 0;
 }
-
 Output:
 a b c d e f g h i j
+
+[or]
+Passing array to function using call by reference
+When we pass the address of an array while calling a function then this is called function call by reference. When we pass an address as an argument, the function declaration should have a pointer as a parameter to receive the passed address.
+
+#include <stdio.h>
+void disp( int *num)
+{
+    printf("%d ", *num);
+}
+int main()
+{
+     int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+     for (int i=0; i<10; i++)
+     {
+         /* Passing addresses of array elements*/
+         disp (&arr[i]);
+     }
+     return 0;
+}
+Output:
+1 2 3 4 5 6 7 8 9 0
