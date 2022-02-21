@@ -1,0 +1,11 @@
+#include<stdio.h> 
+#include<string.h>         //must includer in the header to be able to use strcmp() function
+int main()
+{
+if(strcmp("abc","ac")==0) {
+    printf("hello, mr henasl");
+} else {
+    printf("error cause!");    
+}
+return 0;
+}
