@@ -9,6 +9,8 @@ Return Value: This function returns a pointer points to the first character of t
 If s2 points to an empty string, s1 is returned.
 
 Application : Replace a string with another
+The strstr() function returns pointer to the first occurrence of the matched string in the given string.
+It is used to return substring from first match till the last character.
 
 #include <stdio.h>
 #include <string.h>
