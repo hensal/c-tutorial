@@ -46,3 +46,28 @@ int main()
 Output:
 String found
 First occurrence of string 'for' in 'GeeksforGeeks' is 'forGeeks'
+
+Application:Application : Replace a string with another
+In this example with the help of strstr() function we first searches for the occurrence of STL sub-string in s1 and after that replaces that word with Strings.
+
+// CPP program to illustrate strstr()
+#include <string.h>
+#include <stdio.h>  
+int main()
+{
+    // Take any two strings
+    char s1[] = "Fun with STL";
+    char s2[] = "STL";
+    char* p;  
+    // Find first occurrence of s2 in s1
+    p = strstr(s1, s2);  
+    // Prints the result
+    if (p) {
+        strcpy(p, "Strings");
+        printf("%s", s1);
+    } else
+        printf("String not found\n");  
+    return 0;
+}
+Output:
+Fun with Strings
