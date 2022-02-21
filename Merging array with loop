@@ -1,0 +1,15 @@
+PROGRAM :
+question:without using any external functions the two arrays are getting automatically merged why?
+
+#include <stdio.h>
+int main() {
+    int A[] = {1,4,6,8};
+    int B[] = {2,3,5,7};    
+    printf("Before sorting : ");    
+    for(int i = 0; i<8; i++) {
+        printf("%d " , A[i]);
+    }
+OUTPUT :
+Before sorting: 1 4 6 8 2 3 5 7
+
+answer:It's called undefined behavior.You are accessing array A out of bounds so anything may happen.
