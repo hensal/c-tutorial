@@ -1,0 +1,31 @@
+An argument is referred to the values that are passed within a function when the function is called.
+These values are generally the source of the function that require the arguments during the process of execution.
+These values are assigned to the variables in the definition of the function that is called.
+
+#include <stdio.h>
+int addNumbers(int a, int b);         // function prototype or declaration
+
+int main()
+{
+    int n1,n2,sum;
+
+    printf("Enters two numbers: ");
+    scanf("%d %d",&n1,&n2);
+
+    sum = addNumbers(n1, n2);        // function call,passing the arguments to the function
+    printf("sum = %d",sum);
+
+    return 0;
+}
+
+int addNumbers(int a, int b)         // function definition   
+{
+    int result;
+    result = a+b;
+    return result;                  // return statement
+}
+Note:In programming, argument refers to the variable passed to the function. In the above example, two variables n1 and n2 are passed during the function call.
+
+Function prototype
+A function prototype is simply the declaration of a function that specifies function's name, parameters and return type. It doesn't contain function body.
+A function prototype gives information to the compiler that the function may later be used in the program.
