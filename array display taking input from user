@@ -14,3 +14,21 @@ int main()
     }
     display(arr);
 }
+[SECOND METHOD]
+A better solution would be to avoid global variables and use a pointer to pass your array to the display function.
+#include<stdio.h>
+#define size 5
+
+void display(int *arr){
+     for(int i = 0; i < size ; i++)
+        printf("Element[%d] = %d\n", i, arr[i]);
+}
+int main()
+{
+    int arr[size];
+    for(int i = 0; i < size; i++){
+        printf("Input a number at index %d: ", i);
+        scanf("%d", &arr[i]);
+    }
+    display(arr);
+}
