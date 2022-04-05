@@ -1,0 +1,17 @@
+#include <stdlib.h>
+
+int main(void)
+{
+    int NUM;
+    double GPA;
+
+    printf("Enter your age: ");
+
+    scanf("%lf", &NUM);
+    printf("Enter your GPA: ");
+    scanf("%d", &GPA);
+
+    printf("Your %i years old and your GPA is %f", GPA, NUM);
+
+    return 0;
+}
