@@ -1,0 +1,29 @@
+Pros and cons between #defines, consts and (what you have forgot) enums, depending on usage:
+1.enum s:
+-only possible for integer values.
+-properly scoped
+-can't take the address
+-can be used in places like switch statements.
+-can be used as a dimension for arrays at global scope.
+-can be used as a dimension for static arrays at function scope.
+
+2.static const s:
+-If you need to pass a pointer around, you must use static const.
+- cannot be used in places like switch statements.
+-cannot be used as a dimension for arrays at global scope.
+-cannot be used as a dimension for static arrays at function scope.
+-static const use memory and you can pass the address of a static const.
+
+3.#define s
+-can be used in places like switch statements.
+-cannot be used as a dimension for arrays at global scope.
+-can be used as a dimension for static arrays at function scope.
+-does not use the memory for storage and you cannot pass the address of a #define.
+-example:
+#define MAXLEN 5
+
+void foo(void) {
+   int bar[MAXLEN];
+}
+
+NOTE:If you were asking about C++, then you'd use option the static const — every time.
